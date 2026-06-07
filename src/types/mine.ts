@@ -1,5 +1,6 @@
 export interface UserStats {
-  deviceCount: number
-  monthlyRepairCount: number
-  totalRepairCount: number
+  monthlyCompletedCount: number
+  totalCompletedCount: number
+  positiveReviewRate: number
+  trendData: number[]
 }

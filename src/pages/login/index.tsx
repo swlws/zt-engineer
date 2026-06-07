@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Button, Text, View } from '@tarojs/components'
 import type { ButtonProps } from '@tarojs/components'
-import Taro from '@tarojs/taro'
+import Taro, { useDidShow } from '@tarojs/taro'
 
 import { STORAGE_KEYS } from '@/constants/storage-keys'
 import { loginByCode } from '@/services/user'
@@ -15,6 +15,15 @@ export default function Login() {
   const [agreed, setAgreed] = useState(false)
   const [showAgreementModal, setShowAgreementModal] = useState(false)
   const [submitting, setSubmitting] = useState(false)
+
+  useDidShow(() => {
+    const token = Taro.getStorageSync<string>(STORAGE_KEYS.TOKEN)
+    const userInfo = Taro.getStorageSync(STORAGE_KEYS.USER_INFO)
+
+    if (token && userInfo) {
+      Taro.reLaunch({ url: '/pages/home/index' })
+    }
+  })
 
   const openAgreementPage = (type: 'privacy' | 'user') => {
     Taro.navigateTo({
