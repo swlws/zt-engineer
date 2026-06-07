@@ -2,63 +2,29 @@ import { useState } from 'react'
 import { View, Text, Textarea } from '@tarojs/components'
 import Taro, { useRouter } from '@tarojs/taro'
 
+import { getTicketDetail, submitEvaluation } from '@/services/repair'
+import type { TicketDetail } from '@/types/repair'
+
 import './index.scss'
 
-interface TicketDetail {
-  id: number
-  number: string
-  status: 'repairing' | 'in_progress' | 'completed'
-  statusText: string
-  deviceName: string
-  deviceCode: string
-  deviceModel: string
-  productionDate: string
-  warrantyEndDate: string
-  repairPerson: string
-  phone: string
-  expectTime: string
-  address: string
-  faultType: string
-  description: string
-  images: string[]
-  repairInfo?: {
-    repairTime: string
-    repairPerson: string
-  }
-  canEvaluate: boolean
-}
-
-const ticketData: TicketDetail = {
-  id: 1,
-  number: 'NO000003',
-  status: 'completed',
-  statusText: '已完成',
-  deviceName: 'VMS系列手动影像测量仪',
-  deviceCode: 'WH00000001',
-  deviceModel: 'VMS-3020',
-  productionDate: '2025年6月30日',
-  warrantyEndDate: '2028年6月30日',
-  repairPerson: '张三',
-  phone: '13800138000',
-  expectTime: '2026-06-10 14:00',
-  address: '北京市海淀区科技园A座101室',
-  faultType: '其他',
-  description: '设备出现异常噪音，需要检修',
-  images: [],
-  repairInfo: {
-    repairTime: '2026-06-04',
-    repairPerson: '李四'
-  },
-  canEvaluate: true
-}
-
 export default function TicketDetailPage() {
+  const router = useRouter()
+  const ticketId = Number(router.params.id) || 0
+
+  const [ticketData, setTicketData] = useState<TicketDetail | null>(null)
   const [rating, setRating] = useState({
     overall: 0,
     efficiency: 0,
     attitude: 0
   })
   const [comment, setComment] = useState('')
+
+  // 加载工单详情
+  useState(() => {
+    if (ticketId) {
+      getTicketDetail(ticketId).then(setTicketData).catch(() => {})
+    }
+  })
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -74,9 +40,22 @@ export default function TicketDetailPage() {
   }
 
   const handleSubmitEvaluation = () => {
-    Taro.showToast({
-      title: '评价提交成功',
-      icon: 'success'
+    submitEvaluation({
+      ticketId,
+      overall: rating.overall,
+      efficiency: rating.efficiency,
+      attitude: rating.attitude,
+      comment,
+    }).then(() => {
+      Taro.showToast({
+        title: '评价提交成功',
+        icon: 'success'
+      })
+    }).catch(() => {
+      Taro.showToast({
+        title: '评价提交失败',
+        icon: 'none'
+      })
     })
   }
 
@@ -90,6 +69,14 @@ export default function TicketDetailPage() {
         ★
       </Text>
     ))
+  }
+
+  if (!ticketData) {
+    return (
+      <View className='ticket-detail-page'>
+        <View className='loading'>加载中...</View>
+      </View>
+    )
   }
 
   return (

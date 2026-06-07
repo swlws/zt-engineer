@@ -1,66 +1,19 @@
 import { useState } from 'react'
 import { View, Text, Image } from '@tarojs/components'
+import { useDidShow } from '@tarojs/taro'
+
+import { getDeviceList } from '@/services/device'
+import type { Device } from '@/types/device'
 
 import './index.scss'
 
-interface Device {
-  id: number
-  name: string
-  icon: string
-  status: 'normal' | 'repairing'
-  statusText: string
-  code: string
-  model: string
-  productionDate: string
-  warrantyEndDate: string
-  warrantyStatus: 'active' | 'expired'
-  warrantyText: string
-}
-
 export default function Index() {
   const [filterText, setFilterText] = useState<string>('全部')
+  const [deviceList, setDeviceList] = useState<Device[]>([])
 
-  const deviceList: Device[] = [
-    {
-      id: 1,
-      name: 'VMS系列手动影像测量仪',
-      icon: '📷',
-      status: 'normal',
-      statusText: '正常',
-      code: 'WH00000001',
-      model: 'VMS-3020',
-      productionDate: '2025年6月30日',
-      warrantyEndDate: '2028年6月30日',
-      warrantyStatus: 'active',
-      warrantyText: '在保中'
-    },
-    {
-      id: 2,
-      name: '全自动三坐标测量仪',
-      icon: '🔬',
-      status: 'repairing',
-      statusText: '报修中',
-      code: 'WH00000002',
-      model: 'CMM-8106',
-      productionDate: '2024年3月15日',
-      warrantyEndDate: '2027年3月15日',
-      warrantyStatus: 'active',
-      warrantyText: '在保中'
-    },
-    {
-      id: 3,
-      name: '高精度检测设备',
-      icon: '⚙️',
-      status: 'normal',
-      statusText: '正常',
-      code: 'WH00000003',
-      model: 'HD-2000',
-      productionDate: '2022年10月20日',
-      warrantyEndDate: '2025年10月20日',
-      warrantyStatus: 'expired',
-      warrantyText: '已过期'
-    }
-  ]
+  useDidShow(() => {
+    getDeviceList().then(setDeviceList).catch(() => {})
+  })
 
   const getStatusColor = (status: string) => {
     return status === 'normal' ? '#52c41a' : '#fa8c16'

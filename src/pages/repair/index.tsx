@@ -2,108 +2,17 @@ import { useState } from 'react'
 import { View, Text, Input, Textarea } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 
+import { getFaultTypes, getRepairDevices, getTicketList, submitRepair } from '@/services/repair'
+import type { FaultType, RepairDevice, Ticket } from '@/types/repair'
+
 import './index.scss'
-
-interface Device {
-  id: number;
-  name: string;
-  code: string;
-  model: string;
-  productionDate: string;
-  warrantyEndDate: string;
-}
-
-interface FaultType {
-  id: number;
-  label: string;
-}
-
-interface Ticket {
-  id: number;
-  number: string;
-  status: 'repairing' | 'in_progress' | 'completed';
-  statusText: string;
-  deviceName: string;
-  deviceCode: string;
-  deviceModel: string;
-  repairTime: string;
-  faultType: string;
-  description: string;
-  canEvaluate: boolean;
-}
-
-const faultTypes: FaultType[] = [
-  { id: 1, label: '视觉昏暗、亮度不足' },
-  { id: 2, label: '重影、像散、色彩畸变' },
-  { id: 3, label: '调焦故障' },
-  { id: 4, label: '载物台故障' },
-  { id: 5, label: '灯光闪烁忽明忽暗' },
-  { id: 6, label: '其他' },
-]
-
-const devices: Device[] = [
-  {
-    id: 1,
-    name: 'VMS系列手动影像测量仪',
-    code: 'WH00000001',
-    model: 'VMS-3020',
-    productionDate: '2025年6月30日',
-    warrantyEndDate: '2028年6月30日',
-  },
-  {
-    id: 2,
-    name: '全自动三坐标测量仪',
-    code: 'WH00000002',
-    model: 'CMM-8106',
-    productionDate: '2024年3月15日',
-    warrantyEndDate: '2027年3月15日',
-  },
-]
-
-const tickets: Ticket[] = [
-  {
-    id: 1,
-    number: 'NO000001',
-    status: 'repairing',
-    statusText: '报修中',
-    deviceName: 'VMS系列手动影像测量仪',
-    deviceCode: 'WH00000001',
-    deviceModel: 'VMS-3020',
-    repairTime: '2026-06-07 10:30',
-    faultType: '调焦故障',
-    description: '设备调焦困难，无法清晰对焦，尝试多次调整无效',
-    canEvaluate: false,
-  },
-  {
-    id: 2,
-    number: 'NO000002',
-    status: 'in_progress',
-    statusText: '维修中',
-    deviceName: '全自动三坐标测量仪',
-    deviceCode: 'WH00000002',
-    deviceModel: 'CMM-8106',
-    repairTime: '2026-06-05 14:20',
-    faultType: '灯光闪烁忽明忽暗',
-    description: '设备灯光不稳定，使用过程中频繁闪烁',
-    canEvaluate: false,
-  },
-  {
-    id: 3,
-    number: 'NO000003',
-    status: 'completed',
-    statusText: '已完成',
-    deviceName: 'VMS系列手动影像测量仪',
-    deviceCode: 'WH00000001',
-    deviceModel: 'VMS-3020',
-    repairTime: '2026-06-01 09:00',
-    faultType: '其他',
-    description: '设备出现异常噪音，需要检修',
-    canEvaluate: true,
-  },
-]
 
 export default function RepairPage() {
   const [activeTab, setActiveTab] = useState<string>('form')
+
+  const [faultTypes, setFaultTypes] = useState<FaultType[]>([])
+  const [devices, setDevices] = useState<RepairDevice[]>([])
+  const [tickets, setTickets] = useState<Ticket[]>([])
 
   const [formData, setFormData] = useState({
     deviceId: null as number | null,
@@ -114,6 +23,33 @@ export default function RepairPage() {
     selectedFaultTypes: [] as number[],
     description: '',
     images: [] as string[],
+  })
+
+  // 加载报修表单数据
+  const loadFormData = () => {
+    getFaultTypes().then(setFaultTypes).catch(() => {})
+    getRepairDevices().then(setDevices).catch(() => {})
+  }
+
+  // 加载报修记录数据
+  const loadTickets = () => {
+    getTicketList().then(setTickets).catch(() => {})
+  }
+
+  // Tab切换时加载数据
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab)
+    if (tab === 'form' && faultTypes.length === 0) {
+      loadFormData()
+    }
+    if (tab === 'records' && tickets.length === 0) {
+      loadTickets()
+    }
+  }
+
+  // 初始加载
+  useState(() => {
+    loadFormData()
   })
 
   const selectedDevice = formData.deviceId
@@ -141,9 +77,25 @@ export default function RepairPage() {
   }
 
   const handleSubmit = () => {
-    Taro.showToast({
-      title: '提交成功',
-      icon: 'success',
+    submitRepair({
+      deviceId: formData.deviceId!,
+      repairPerson: formData.repairPerson,
+      phone: formData.phone,
+      expectTime: formData.expectTime,
+      address: formData.address,
+      faultTypeIds: formData.selectedFaultTypes,
+      description: formData.description,
+      images: formData.images,
+    }).then(() => {
+      Taro.showToast({
+        title: '提交成功',
+        icon: 'success',
+      })
+    }).catch(() => {
+      Taro.showToast({
+        title: '提交失败',
+        icon: 'none',
+      })
     })
   }
 
@@ -171,13 +123,13 @@ export default function RepairPage() {
       <View className='repair-page__tabs'>
         <View
           className={`repair-page__tab ${activeTab === 'form' ? 'active' : ''}`}
-          onClick={() => setActiveTab('form')}
+          onClick={() => handleTabChange('form')}
         >
           <Text className='repair-page__tab-text'>在线报修</Text>
         </View>
         <View
           className={`repair-page__tab ${activeTab === 'records' ? 'active' : ''}`}
-          onClick={() => setActiveTab('records')}
+          onClick={() => handleTabChange('records')}
         >
           <Text className='repair-page__tab-text'>报修记录</Text>
         </View>

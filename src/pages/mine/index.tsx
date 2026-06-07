@@ -3,7 +3,9 @@ import { Image, Text, View } from "@tarojs/components";
 import Taro, { useDidShow } from "@tarojs/taro";
 
 import { STORAGE_KEYS } from "@/constants/storage-keys";
+import { getUserStats } from "@/services/mine";
 import type { UserInfo } from "@/types/user";
+import type { UserStats } from "@/types/mine";
 
 import placeholderAvatar from "@/assets/logo.png";
 
@@ -13,10 +15,17 @@ const PLACEHOLDER_AVATAR = placeholderAvatar;
 
 export default function Mine() {
   const [user, setUser] = useState<UserInfo | null>(null);
+  const [stats, setStats] = useState<UserStats>({
+    deviceCount: 0,
+    monthlyRepairCount: 0,
+    totalRepairCount: 0,
+  });
 
   useDidShow(() => {
     const info = Taro.getStorageSync<UserInfo>(STORAGE_KEYS.USER_INFO);
     setUser(info || null);
+
+    getUserStats().then(setStats).catch(() => {});
   });
 
   const menuItems = [
@@ -64,15 +73,15 @@ export default function Mine() {
 
       <View className="mine__stats">
         <View className="mine__stat">
-          <View className="mine__stat-value">2</View>
+          <View className="mine__stat-value">{stats.deviceCount}</View>
           <Text className="mine__stat-label">设备数量</Text>
         </View>
         <View className="mine__stat">
-          <View className="mine__stat-value">0</View>
+          <View className="mine__stat-value">{stats.monthlyRepairCount}</View>
           <Text className="mine__stat-label">本月报修</Text>
         </View>
         <View className="mine__stat">
-          <View className="mine__stat-value">3</View>
+          <View className="mine__stat-value">{stats.totalRepairCount}</View>
           <Text className="mine__stat-label">累计报修</Text>
         </View>
       </View>
