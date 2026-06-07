@@ -1,78 +1,56 @@
-export interface FaultType {
-  id: number
-  label: string
-}
-
-export type TicketStatus = 'repairing' | 'in_progress' | 'completed'
+export type TicketStatus = 'pending' | 'paused' | 'processing' | 'completed'
 
 export interface Ticket {
   id: number
   number: string
   status: TicketStatus
   statusText: string
-  deviceName: string
   deviceCode: string
+  deviceName: string
   deviceModel: string
+  reportTime: string
+  reporter: string
+  faultType: string
+  description: string
+  address: string
+}
+
+export interface RepairRecord {
   repairTime: string
-  faultType: string
-  description: string
-  canEvaluate: boolean
-}
-
-export interface TicketDetail {
-  id: number
-  number: string
-  status: TicketStatus
-  statusText: string
-  deviceName: string
-  deviceCode: string
-  deviceModel: string
-  productionDate: string
-  warrantyEndDate: string
-  repairPerson: string
-  phone: string
-  expectTime: string
-  address: string
-  faultType: string
-  description: string
+  repairEngineer: string
+  content: string
   images: string[]
-  repairInfo?: {
-    repairTime: string
-    repairPerson: string
-  }
-  canEvaluate: boolean
 }
 
-export interface RepairDevice {
-  id: number
-  name: string
-  code: string
-  model: string
+export interface TicketDetail extends Ticket {
+  contactPhone: string
   productionDate: string
-  warrantyEndDate: string
-}
-
-export interface RepairSubmitParams {
-  deviceId: number
-  repairPerson: string
-  phone: string
+  warrantyDate: string
   expectTime: string
-  address: string
-  faultTypeIds: number[]
-  description: string
-  images: string[]
+  faultTags: string[]
+  medias: string[]
+  repairRecord?: RepairRecord
 }
 
 export interface TicketListParams {
   status?: TicketStatus
-  page?: number
-  pageSize?: number
 }
 
-export interface EvaluationParams {
+export interface TicketProcessParams {
   ticketId: number
-  overall: number
-  efficiency: number
-  attitude: number
-  comment: string
+  status: Extract<TicketStatus, 'paused' | 'completed'>
+  content: string
+  images: string[]
+}
+
+export interface Engineer {
+  id: number
+  name: string
+  company: string
+  role: string
+}
+
+export interface TransferTicketParams {
+  ticketId: number
+  engineerId: number
 }

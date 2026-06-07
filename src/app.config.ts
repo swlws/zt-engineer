@@ -6,6 +6,7 @@ export default defineAppConfig({
     "pages/repair/index",
     "pages/mine/index",
     "pages/ticket-detail/index",
+    "pages/transfer/index",
   ],
   window: {
     backgroundTextStyle: "light",
@@ -27,7 +28,7 @@ export default defineAppConfig({
       },
       {
         pagePath: "pages/repair/index",
-        text: "报修",
+        text: "工单",
         iconPath: "assets/logo.png",
         selectedIconPath: "assets/logo.png",
       },

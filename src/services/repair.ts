@@ -1,90 +1,84 @@
 import type {
-  FaultType,
-  RepairDevice,
+  Engineer,
   Ticket,
   TicketDetail,
   TicketListParams,
-  RepairSubmitParams,
-  EvaluationParams,
+  TicketProcessParams,
+  TransferTicketParams,
 } from '@/types/repair'
 import { USE_MOCK } from '@/utils/constant'
 
 import {
-  mockGetFaultTypes,
-  mockGetRepairDevices,
-  mockGetTicketList,
   mockGetTicketDetail,
-  mockSubmitRepair,
-  mockSubmitEvaluation,
+  mockGetTicketList,
+  mockGetTransferEngineers,
+  mockStartTicket,
+  mockSubmitTicketProcess,
+  mockTransferTicket,
 } from './repair.mock'
 import { request } from './request'
 
 const BASE_URL = ''
 
-/** 获取故障类型列表 */
-export function getFaultTypes() {
-  if (USE_MOCK) {
-    return mockGetFaultTypes()
-  }
-  return request<FaultType[]>({
-    url: `${BASE_URL}/repair/fault-types`,
-    method: 'GET',
-  })
-}
-
-/** 获取报修可选设备列表 */
-export function getRepairDevices() {
-  if (USE_MOCK) {
-    return mockGetRepairDevices()
-  }
-  return request<RepairDevice[]>({
-    url: `${BASE_URL}/repair/devices`,
-    method: 'GET',
-  })
-}
-
-/** 获取报修工单列表 */
 export function getTicketList(params?: TicketListParams) {
   if (USE_MOCK) {
-    return mockGetTicketList()
+    return mockGetTicketList(params)
   }
   return request<Ticket[]>({
-    url: `${BASE_URL}/repair/tickets`,
+    url: `${BASE_URL}/tickets`,
     method: 'GET',
     data: params,
   })
 }
 
-/** 获取工单详情 */
 export function getTicketDetail(id: number) {
   if (USE_MOCK) {
     return mockGetTicketDetail(id)
   }
   return request<TicketDetail>({
-    url: `${BASE_URL}/repair/tickets/${id}`,
+    url: `${BASE_URL}/tickets/${id}`,
     method: 'GET',
   })
 }
 
-/** 提交报修 */
-export function submitRepair(params: RepairSubmitParams) {
+export function startTicket(ticketId: number) {
   if (USE_MOCK) {
-    return mockSubmitRepair(params)
+    return mockStartTicket(ticketId)
   }
-  return request<{ ticketId: number }>({
-    url: `${BASE_URL}/repair/submit`,
+  return request<void>({
+    url: `${BASE_URL}/tickets/${ticketId}/start`,
+    method: 'POST',
+  })
+}
+
+export function submitTicketProcess(params: TicketProcessParams) {
+  if (USE_MOCK) {
+    return mockSubmitTicketProcess(params)
+  }
+  return request<void>({
+    url: `${BASE_URL}/tickets/${params.ticketId}/process`,
     method: 'POST',
     data: params,
   })
 }
 
-/** 提交评价 */
-export function submitEvaluation(params: EvaluationParams) {
+export function getTransferEngineers(keyword?: string) {
   if (USE_MOCK) {
-    return mockSubmitEvaluation(params)
+    return mockGetTransferEngineers(keyword)
+  }
+  return request<Engineer[]>({
+    url: `${BASE_URL}/tickets/transfer-engineers`,
+    method: 'GET',
+    data: { keyword },
+  })
+}
+
+export function transferTicket(params: TransferTicketParams) {
+  if (USE_MOCK) {
+    return mockTransferTicket(params)
   }
   return request<void>({
-    url: `${BASE_URL}/repair/evaluation`,
+    url: `${BASE_URL}/tickets/${params.ticketId}/transfer`,
     method: 'POST',
     data: params,
   })

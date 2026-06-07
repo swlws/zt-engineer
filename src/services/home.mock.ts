@@ -7,7 +7,7 @@ const mockData: HomeData = {
     { id: 3, image: 'https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=important%20event%20promotion%20banner%20professional&image_size=landscape_16_9', title: '重要活动' },
   ],
   quickEntries: [
-    { id: 1, icon: '🔧', text: '报修', color: '#ff7d00' },
+    { id: 1, icon: '🔧', text: '工单', color: '#ff7d00' },
     { id: 2, icon: '💬', text: '反馈', color: '#52c41a' },
     { id: 3, icon: '👩‍💼', text: '客服', color: '#722ed1' },
   ],

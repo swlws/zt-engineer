@@ -1,3 +1,3 @@
 export default definePageConfig({
-  navigationBarTitleText: '报修'
+  navigationBarTitleText: '工单列表'
 })

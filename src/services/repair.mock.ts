@@ -1,125 +1,197 @@
-import type { FaultType, RepairDevice, Ticket, TicketDetail, RepairSubmitParams, EvaluationParams } from '@/types/repair'
+import type {
+  Engineer,
+  Ticket,
+  TicketDetail,
+  TicketListParams,
+  TicketProcessParams,
+  TicketStatus,
+  TransferTicketParams,
+} from '@/types/repair'
 
-const mockFaultTypes: FaultType[] = [
-  { id: 1, label: '视觉昏暗、亮度不足' },
-  { id: 2, label: '重影、像散、色彩畸变' },
-  { id: 3, label: '调焦故障' },
-  { id: 4, label: '载物台故障' },
-  { id: 5, label: '灯光闪烁忽明忽暗' },
-  { id: 6, label: '其他' },
+const sampleImages = [
+  'https://images.unsplash.com/photo-1520763185298-1b434c919102?auto=format&fit=crop&w=400&q=80',
+  'https://images.unsplash.com/photo-1526045612212-70caf35c14df?auto=format&fit=crop&w=400&q=80',
+  'https://images.unsplash.com/photo-1468327768560-75b778cbb551?auto=format&fit=crop&w=400&q=80',
+  'https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=400&q=80',
+  'https://images.unsplash.com/photo-1519378058457-4c29a0a2efac?auto=format&fit=crop&w=400&q=80',
 ]
 
-const mockRepairDevices: RepairDevice[] = [
-  {
-    id: 1,
-    name: 'VMS系列手动影像测量仪',
-    code: 'WH00000001',
-    model: 'VMS-3020',
-    productionDate: '2025年6月30日',
-    warrantyEndDate: '2028年6月30日',
-  },
-  {
-    id: 2,
-    name: '全自动三坐标测量仪',
-    code: 'WH00000002',
-    model: 'CMM-8106',
-    productionDate: '2024年3月15日',
-    warrantyEndDate: '2027年3月15日',
-  },
-]
+const mockEngineers: Engineer[] = Array.from({ length: 10 }, (_, index) => ({
+  id: index + 1,
+  name: '张三',
+  company: '智庭科技',
+  role: '维修工程部/部门主管',
+}))
 
-const mockTickets: Ticket[] = [
+let ticketStore: TicketDetail[] = [
   {
     id: 1,
-    number: 'NO000001',
-    status: 'repairing',
-    statusText: '报修中',
-    deviceName: 'VMS系列手动影像测量仪',
+    number: 'NO000003',
+    status: 'pending',
+    statusText: '未开始',
     deviceCode: 'WH00000001',
+    deviceName: 'VMS系列手动影像测量仪',
     deviceModel: 'VMS-3020',
-    repairTime: '2026-06-07 10:30',
-    faultType: '调焦故障',
-    description: '设备调焦困难，无法清晰对焦，尝试多次调整无效',
-    canEvaluate: false,
+    reportTime: '2025年6月30日 12:23:12',
+    reporter: '张三',
+    faultType: '视觉昏暗、亮度不足',
+    description: '显微镜在使用过程中反复出现视觉昏暗，亮度不足的问题，已影响日常测量作业。',
+    address: '湖北省武汉市东湖高新技术开发区江汉路8号天琪集团3号厂房3楼',
+    contactPhone: '18300231896',
+    productionDate: '2025年6月30日',
+    warrantyDate: '2028年6月30日',
+    expectTime: '2026年6月05日',
+    faultTags: ['视觉昏暗、亮度不足'],
+    medias: sampleImages,
   },
   {
     id: 2,
-    number: 'NO000002',
-    status: 'in_progress',
-    statusText: '维修中',
-    deviceName: '全自动三坐标测量仪',
-    deviceCode: 'WH00000002',
-    deviceModel: 'CMM-8106',
-    repairTime: '2026-06-05 14:20',
-    faultType: '灯光闪烁忽明忽暗',
-    description: '设备灯光不稳定，使用过程中频繁闪烁',
-    canEvaluate: false,
+    number: 'NO000001',
+    status: 'paused',
+    statusText: '暂停中',
+    deviceCode: 'WH00000001',
+    deviceName: 'VMS系列手动影像测量仪',
+    deviceModel: 'VMS-3020',
+    reportTime: '2025年6月30日 12:23:12',
+    reporter: '张三',
+    faultType: '视觉昏暗、亮度不足',
+    description: '显微镜在使用过程中反复出现视觉昏暗，亮度不足的问题，当前等待配件到位后继续处理。',
+    address: '湖北省武汉市东湖高新技术开发区江汉路8号天琪集团3号厂房3楼',
+    contactPhone: '18300231896',
+    productionDate: '2025年6月30日',
+    warrantyDate: '2028年6月30日',
+    expectTime: '2026年6月05日',
+    faultTags: ['视觉昏暗、亮度不足'],
+    medias: sampleImages,
+    repairRecord: {
+      repairTime: '2026年6月05日 13:23:56',
+      repairEngineer: '李四',
+      content: '已完成现场初步排查，确认需要更换灯源组件，当前工单先暂停等待备件到位。',
+      images: sampleImages.slice(0, 5),
+    },
   },
   {
     id: 3,
-    number: 'NO000003',
+    number: 'NO000002',
     status: 'completed',
     statusText: '已完成',
-    deviceName: 'VMS系列手动影像测量仪',
     deviceCode: 'WH00000001',
+    deviceName: 'VMS系列手动影像测量仪',
     deviceModel: 'VMS-3020',
-    repairTime: '2026-06-01 09:00',
-    faultType: '其他',
-    description: '设备出现异常噪音，需要检修',
-    canEvaluate: true,
+    reportTime: '2025年6月30日 12:23:12',
+    reporter: '张三',
+    faultType: '视觉昏暗、亮度不足',
+    description: '显微镜在使用过程中反复出现视觉昏暗，亮度不足的问题，维修已完成。',
+    address: '湖北省武汉市东湖高新技术开发区江汉路8号天琪集团3号厂房3楼',
+    contactPhone: '18300231896',
+    productionDate: '2025年6月30日',
+    warrantyDate: '2028年6月30日',
+    expectTime: '2026年6月05日',
+    faultTags: ['视觉昏暗、亮度不足'],
+    medias: sampleImages,
+    repairRecord: {
+      repairTime: '2026年6月05日 13:23:56',
+      repairEngineer: '李四',
+      content: '这是维修内容描述文字。这是一段维修内容描述文字。这是一段维修内容描述文字。这是一段维修内容描述文字。',
+      images: sampleImages.slice(0, 5),
+    },
   },
 ]
 
-const mockTicketDetail: TicketDetail = {
-  id: 1,
-  number: 'NO000003',
-  status: 'completed',
-  statusText: '已完成',
-  deviceName: 'VMS系列手动影像测量仪',
-  deviceCode: 'WH00000001',
-  deviceModel: 'VMS-3020',
-  productionDate: '2025年6月30日',
-  warrantyEndDate: '2028年6月30日',
-  repairPerson: '张三',
-  phone: '13800138000',
-  expectTime: '2026-06-10 14:00',
-  address: '北京市海淀区科技园A座101室',
-  faultType: '其他',
-  description: '设备出现异常噪音，需要检修',
-  images: [],
-  repairInfo: {
-    repairTime: '2026-06-04',
-    repairPerson: '李四',
-  },
-  canEvaluate: true,
+function clone<T>(data: T): T {
+  return JSON.parse(JSON.stringify(data)) as T
 }
 
-export function mockGetFaultTypes(): Promise<FaultType[]> {
-  console.info('[RepairServiceMock] Returning mock fault types.')
-  return Promise.resolve(mockFaultTypes)
+function getStatusText(status: TicketStatus) {
+  switch (status) {
+    case 'pending':
+      return '未开始'
+    case 'paused':
+      return '暂停中'
+    case 'processing':
+      return '维修中'
+    case 'completed':
+      return '已完成'
+  }
 }
 
-export function mockGetRepairDevices(): Promise<RepairDevice[]> {
-  console.info('[RepairServiceMock] Returning mock repair devices.')
-  return Promise.resolve(mockRepairDevices)
+function ensureProcessingRecord(ticket: TicketDetail) {
+  if (!ticket.repairRecord) {
+    ticket.repairRecord = {
+      repairTime: '2026年6月05日 13:23:56',
+      repairEngineer: '李四',
+      content: '',
+      images: [],
+    }
+  }
 }
 
-export function mockGetTicketList(): Promise<Ticket[]> {
-  console.info('[RepairServiceMock] Returning mock ticket list.')
-  return Promise.resolve(mockTickets)
+function toTicket(item: TicketDetail): Ticket {
+  return {
+    id: item.id,
+    number: item.number,
+    status: item.status,
+    statusText: item.statusText,
+    deviceCode: item.deviceCode,
+    deviceName: item.deviceName,
+    deviceModel: item.deviceModel,
+    reportTime: item.reportTime,
+    reporter: item.reporter,
+    faultType: item.faultType,
+    description: item.description,
+    address: item.address,
+  }
 }
 
-export function mockGetTicketDetail(_id: number): Promise<TicketDetail> {
-  console.info('[RepairServiceMock] Returning mock ticket detail.')
-  return Promise.resolve(mockTicketDetail)
+export function mockGetTicketList(params?: TicketListParams): Promise<Ticket[]> {
+  const list = params?.status
+    ? ticketStore.filter((item) => item.status === params.status)
+    : ticketStore
+  return Promise.resolve(clone(list.map(toTicket)))
 }
 
-export function mockSubmitRepair(_params: RepairSubmitParams): Promise<{ ticketId: number }> {
-  console.info('[RepairServiceMock] Mock repair submitted.')
-  return Promise.resolve({ ticketId: Date.now() })
+export function mockGetTicketDetail(id: number): Promise<TicketDetail> {
+  const target = ticketStore.find((item) => item.id === id) ?? ticketStore[0]
+  return Promise.resolve(clone(target))
 }
 
-export function mockSubmitEvaluation(_params: EvaluationParams): Promise<void> {
-  console.info('[RepairServiceMock] Mock evaluation submitted.')
+export function mockStartTicket(ticketId: number): Promise<void> {
+  const target = ticketStore.find((item) => item.id === ticketId)
+  if (target) {
+    target.status = 'processing'
+    target.statusText = getStatusText('processing')
+    ensureProcessingRecord(target)
+  }
+  return Promise.resolve()
+}
+
+export function mockSubmitTicketProcess(params: TicketProcessParams): Promise<void> {
+  const target = ticketStore.find((item) => item.id === params.ticketId)
+  if (target) {
+    ensureProcessingRecord(target)
+    target.status = params.status
+    target.statusText = getStatusText(params.status)
+    target.repairRecord = {
+      repairTime: target.repairRecord?.repairTime ?? '2026年6月05日 13:23:56',
+      repairEngineer: target.repairRecord?.repairEngineer ?? '李四',
+      content: params.content,
+      images: params.images,
+    }
+  }
+  return Promise.resolve()
+}
+
+export function mockGetTransferEngineers(keyword?: string): Promise<Engineer[]> {
+  const normalizedKeyword = keyword?.trim()
+  const list = normalizedKeyword
+    ? mockEngineers.filter((item) => {
+        const text = `${item.name}${item.company}${item.role}`
+        return text.includes(normalizedKeyword)
+      })
+    : mockEngineers
+  return Promise.resolve(clone(list))
+}
+
+export function mockTransferTicket(_params: TransferTicketParams): Promise<void> {
   return Promise.resolve()
 }

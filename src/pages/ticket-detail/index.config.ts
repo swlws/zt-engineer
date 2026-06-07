@@ -1,3 +1,3 @@
 export default definePageConfig({
-  navigationBarTitleText: '查看工单'
+  navigationBarTitleText: '工单详情'
 })
