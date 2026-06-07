@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react'
 import { Image, Text, Textarea, View } from '@tarojs/components'
 import Taro, { useDidShow, useRouter } from '@tarojs/taro'
 
-import { getTicketDetail, startTicket, submitTicketProcess } from '@/services/repair'
-import type { TicketDetail, TicketStatus } from '@/types/repair'
+import { getTicketDetail, startTicket, submitTicketProcess } from '@/services/ticket'
+import type { TicketDetail, TicketStatus } from '@/types/ticket'
 
 import './index.scss'
 

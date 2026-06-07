@@ -2,8 +2,8 @@ import { useState } from 'react'
 import { Input, Text, View } from '@tarojs/components'
 import Taro, { useDidShow, useRouter } from '@tarojs/taro'
 
-import { getTransferEngineers, transferTicket } from '@/services/repair'
-import type { Engineer } from '@/types/repair'
+import { getTransferEngineers, transferTicket } from '@/services/ticket'
+import type { Engineer } from '@/types/ticket'
 
 import './index.scss'
 

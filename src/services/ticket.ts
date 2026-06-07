@@ -5,7 +5,7 @@ import type {
   TicketListParams,
   TicketProcessParams,
   TransferTicketParams,
-} from '@/types/repair'
+} from '@/types/ticket'
 import { USE_MOCK } from '@/utils/constant'
 
 import {
@@ -15,7 +15,7 @@ import {
   mockStartTicket,
   mockSubmitTicketProcess,
   mockTransferTicket,
-} from './repair.mock'
+} from './ticket.mock'
 import { request } from './request'
 
 const BASE_URL = ''

@@ -3,7 +3,7 @@ export default defineAppConfig({
     "pages/home/index",
     "pages/login/index",
     "pages/agreement/index",
-    "pages/repair/index",
+    "pages/ticket/index",
     "pages/mine/index",
     "pages/ticket-detail/index",
     "pages/transfer/index",
@@ -27,7 +27,7 @@ export default defineAppConfig({
         selectedIconPath: "assets/logo.png",
       },
       {
-        pagePath: "pages/repair/index",
+        pagePath: "pages/ticket/index",
         text: "工单",
         iconPath: "assets/logo.png",
         selectedIconPath: "assets/logo.png",

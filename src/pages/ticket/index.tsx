@@ -2,8 +2,8 @@ import { useState } from 'react'
 import { Text, View } from '@tarojs/components'
 import Taro, { useDidShow } from '@tarojs/taro'
 
-import { getTicketList } from '@/services/repair'
-import type { Ticket, TicketStatus } from '@/types/repair'
+import { getTicketList } from '@/services/ticket'
+import type { Ticket, TicketStatus } from '@/types/ticket'
 
 import './index.scss'
 
@@ -29,7 +29,7 @@ function getStatusColor(status: TicketStatus) {
   }
 }
 
-export default function RepairPage() {
+export default function TicketPage() {
   const [activeFilter, setActiveFilter] = useState<TicketFilter>('all')
   const [ticketList, setTicketList] = useState<Ticket[]>([])
 
@@ -70,15 +70,15 @@ export default function RepairPage() {
   }
 
   return (
-    <View className='repair-page'>
-      <View className='repair-page__tabs'>
+    <View className='ticket-page'>
+      <View className='ticket-page__tabs'>
         {filterOptions.map((item) => (
           <View
             key={item.key}
-            className={`repair-page__tab ${activeFilter === item.key ? 'active' : ''}`}
+            className={`ticket-page__tab ${activeFilter === item.key ? 'active' : ''}`}
             onClick={() => setActiveFilter(item.key)}
           >
-            <Text className='repair-page__tab-text'>
+            <Text className='ticket-page__tab-text'>
               {item.label}
               {item.key === 'all' ? `(${counts.all})` : ''}
             </Text>
@@ -86,7 +86,7 @@ export default function RepairPage() {
         ))}
       </View>
 
-      <View className='repair-page__list'>
+      <View className='ticket-page__list'>
         {visibleTickets.map((ticket) => (
           <View key={ticket.id} className='ticket-card'>
             <View className='ticket-card__header'>
