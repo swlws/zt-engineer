@@ -5,6 +5,7 @@ export default defineAppConfig({
     "pages/agreement/index",
     "pages/home/index",
     "pages/mine/index",
+    "pages/ticket-detail/index",
   ],
   window: {
     backgroundTextStyle: "light",
