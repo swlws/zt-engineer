@@ -1,10 +1,9 @@
 export default defineAppConfig({
   pages: [
-    "pages/index/index",
+    "pages/home/index",
     "pages/login/index",
     "pages/agreement/index",
     "pages/repair/index",
-    "pages/home/index",
     "pages/mine/index",
     "pages/ticket-detail/index",
   ],
@@ -23,12 +22,6 @@ export default defineAppConfig({
       {
         pagePath: "pages/home/index",
         text: "首页",
-        iconPath: "assets/logo.png",
-        selectedIconPath: "assets/logo.png",
-      },
-      {
-        pagePath: "pages/index/index",
-        text: "设备",
         iconPath: "assets/logo.png",
         selectedIconPath: "assets/logo.png",
       },

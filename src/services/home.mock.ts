@@ -8,9 +8,8 @@ const mockData: HomeData = {
   ],
   quickEntries: [
     { id: 1, icon: '🔧', text: '报修', color: '#ff7d00' },
-    { id: 2, icon: '📱', text: '设备', color: '#1677ff' },
-    { id: 3, icon: '💬', text: '反馈', color: '#52c41a' },
-    { id: 4, icon: '👩‍💼', text: '客服', color: '#722ed1' },
+    { id: 2, icon: '💬', text: '反馈', color: '#52c41a' },
+    { id: 3, icon: '👩‍💼', text: '客服', color: '#722ed1' },
   ],
   announcements: [
     { id: 1, title: '【维保政策更新】2026年度设备延保服务开启', tag: '维保政策', date: '2025-06-01' },
