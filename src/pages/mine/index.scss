@@ -1,0 +1,102 @@
+.mine {
+  min-height: 100vh;
+  background: $color-bg;
+  box-sizing: border-box;
+  padding-bottom: 120rpx;
+
+  &__banner {
+    height: 420rpx;
+    padding: 0 48rpx;
+    display: flex;
+    align-items: center;
+  }
+
+  &__banner-content {
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+
+  &__avatar {
+    width: 128rpx;
+    height: 128rpx;
+    border-radius: 50%;
+    background: $color-bg;
+    border: 6rpx solid #fff;
+    box-sizing: border-box;
+  }
+
+  &__banner-meta {
+    margin-left: 24rpx;
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__nickname {
+    font-size: 36rpx;
+    font-weight: 600;
+    color: $color-text;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__stats {
+    margin: -56rpx 48rpx 0;
+    background: #fff;
+    border-radius: $radius-lg;
+    padding: 32rpx 24rpx;
+    box-shadow: 0 12rpx 32rpx rgba(0, 0, 0, 0.06);
+    display: flex;
+    justify-content: space-around;
+  }
+
+  &__stat {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  &__stat-value {
+    font-size: 44rpx;
+    font-weight: 700;
+    color: $color-text;
+    line-height: 56rpx;
+  }
+
+  &__stat-label {
+    margin-top: 8rpx;
+    font-size: 24rpx;
+    color: $color-text-secondary;
+  }
+
+  &__menu {
+    margin: 24rpx 48rpx 0;
+    background: #fff;
+    border-radius: $radius-lg;
+    overflow: hidden;
+  }
+
+  &__menu-item {
+    padding: 28rpx 32rpx;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1rpx solid $color-border;
+  }
+
+  &__menu-item--last {
+    border-bottom: 0;
+  }
+
+  &__menu-text {
+    font-size: 28rpx;
+    color: $color-text;
+  }
+
+  &__menu-arrow {
+    font-size: 32rpx;
+    color: $color-text-secondary;
+  }
+}

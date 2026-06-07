@@ -1,0 +1,178 @@
+.login {
+  min-height: 100vh;
+  padding: 120rpx 48rpx 64rpx;
+  background: linear-gradient(180deg, #f5f9ff 0%, #ffffff 48%, #ffffff 100%);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 80rpx;
+  }
+
+  &__logo {
+    width: 168rpx;
+    height: 168rpx;
+    border-radius: 40rpx;
+    background: linear-gradient(135deg, #1677ff 0%, #4f9bff 100%);
+    color: #fff;
+    font-size: 60rpx;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 16rpx 32rpx rgba(22, 119, 255, 0.18);
+  }
+
+  &__title {
+    margin-top: 40rpx;
+    font-size: 40rpx;
+    font-weight: 600;
+    line-height: 56rpx;
+    color: $color-text;
+    text-align: center;
+  }
+
+  &__subtitle {
+    margin-top: 16rpx;
+    font-size: 28rpx;
+    line-height: 40rpx;
+    color: $color-text-secondary;
+    text-align: center;
+  }
+
+  &__primaryButton,
+  &__modalButton {
+    width: 100%;
+    border: none;
+
+    &::after {
+      border: none;
+    }
+  }
+
+  &__primaryButton {
+    margin-top: 96rpx;
+    width: 100%;
+    max-width: 600rpx;
+    height: 96rpx;
+    line-height: 96rpx;
+    border-radius: 48rpx;
+    background: linear-gradient(135deg, #1677ff 0%, #3b8cff 100%);
+    color: #fff;
+    font-size: 32rpx;
+    font-weight: 600;
+  }
+
+  &__agreement {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    column-gap: 8rpx;
+    row-gap: 8rpx;
+    padding-bottom: 24rpx;
+  }
+
+  &__checkbox {
+    width: 32rpx;
+    height: 32rpx;
+    border: 2rpx solid #c8d0db;
+    border-radius: 50%;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+
+    &--checked {
+      border-color: $color-primary;
+      background: rgba(22, 119, 255, 0.12);
+    }
+  }
+
+  &__checkboxInner {
+    width: 16rpx;
+    height: 16rpx;
+    border-radius: 50%;
+    background: $color-primary;
+  }
+
+  &__agreementText,
+  &__agreementLink {
+    font-size: 24rpx;
+    line-height: 36rpx;
+  }
+
+  &__agreementText {
+    color: $color-text-secondary;
+  }
+
+  &__agreementLink {
+    color: $color-primary;
+  }
+
+  &__overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &--locked {
+      padding: 0 48rpx;
+    }
+  }
+
+  &__modal {
+    width: 100%;
+    background: #fff;
+    border-radius: 32rpx;
+    overflow: hidden;
+  }
+
+  &__modalTitle {
+    padding-top: 40rpx;
+    text-align: center;
+    font-size: 34rpx;
+    font-weight: 600;
+    color: $color-text;
+  }
+
+  &__modalDesc {
+    padding: 24rpx 48rpx 40rpx;
+    font-size: 28rpx;
+    line-height: 44rpx;
+    color: $color-text-secondary;
+    text-align: center;
+  }
+
+  &__modalActions {
+    display: flex;
+    border-top: 1px solid $color-border;
+  }
+
+  &__modalButton {
+    height: 96rpx;
+    line-height: 96rpx;
+    border-radius: 0;
+    background: #fff;
+    font-size: 30rpx;
+
+    &--cancel {
+      color: $color-text-secondary;
+      border-right: 1px solid $color-border;
+    }
+
+    &--confirm {
+      color: $color-primary;
+      font-weight: 600;
+    }
+  }
+}
